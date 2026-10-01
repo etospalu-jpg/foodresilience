@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
+    id: "/overview",
     name: "NADI Pangan",
     short_name: "NADI",
     description: "Food Resilience Monitoring, Evaluation & Learning",
     start_url: "/overview",
+    scope: "/",
     display: "standalone",
     background_color: "#F5F6F3",
     theme_color: "#123C32",
