@@ -57,10 +57,10 @@ export async function POST(request:NextRequest){
 
   const inserted=await sql`
     insert into nadi.interventions(
-      id,title,intervention_type,region_id,location_label,agency,collaborators,status,objective,
+      id,title,intervention_type,region_id,location_label,agency,status,objective,
       beneficiaries_target,beneficiaries_actual,started_at,evaluation_due,source_code,verification_status,is_simulation
     ) values(
-      ${id},${title},${type},${String(region.id)},${location||null},${agency},${[] as string[]},'active',${objective||null},
+      ${id},${title},${type},${String(region.id)},${location||null},${agency},'active',${objective||null},
       ${beneficiariesTarget},${beneficiariesActual},${startedAt||null},${evaluationDue||null},'DEMO-INTERVENTION','simulation',true
     )
     returning id,title,region_id,status,is_simulation,created_at
