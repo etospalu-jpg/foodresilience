@@ -37,7 +37,7 @@ export async function buildInsightContext(): Promise<InsightContext> {
       ],
       province:{...province,source:"S1/S2"},
       regions:regions.map(r=>({...r,source:"S1"})),
-      interventions:interventions.map(i=>({...i,source:i.simulation?"S3":"S1"})),
+      interventions:interventions.map(i=>({...i,source:"S3"})),
       alerts:alerts.map(a=>({...a,source:"S4"})),
       learning:learning.map(l=>({...l,source:"S5"})),
     };
