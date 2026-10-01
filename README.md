@@ -24,3 +24,6 @@ npm run dev
 ```
 
 Without `DATABASE_URL`, the app runs with a safe seed-data fallback.
+## Pilot data architecture
+
+NADI Pangan separates verified public indicators from simulation MEL records. The current pilot reads verified IKP 2026 indicators from Neon, uses official BIG administrative boundaries for the spatial view, keeps Gemini/NADI Insight read-only, and labels pilot intervention/monitoring/learning records as simulation until a human verification workflow is added.
