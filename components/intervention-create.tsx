@@ -1,14 +1,15 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Plus, Save, ShieldCheck, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function InterventionCreate({regions,compact=false}:{regions:Array<{slug:string;name:string}>;compact?:boolean}){
+export function InterventionCreate({regions,compact=false,autoOpen=false}:{regions:Array<{slug:string;name:string}>;compact?:boolean;autoOpen?:boolean}){
   const [open,setOpen]=useState(false);
   const [saving,setSaving]=useState(false);
   const [error,setError]=useState("");
   const router=useRouter();
+  useEffect(()=>{if(autoOpen)setOpen(true)},[autoOpen]);
 
   async function submit(event:FormEvent<HTMLFormElement>){
     event.preventDefault();
