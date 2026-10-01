@@ -1,0 +1,12 @@
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft, CheckCircle2, Clock3, Database, FileCheck2 } from "lucide-react";
+import { interventions, regions } from "@/lib/data";
+import { StatusBadge } from "@/components/status-badge";
+
+export default async function RegionDetail({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const region = regions.find(r => r.slug === slug); if (!region) notFound();
+  const items = interventions.filter(i => i.region === region.name);
+  return <div className="page-stack"><Link className="back-link" href="/regions"><ArrowLeft size={16}/> Wilayah</Link><section className="region-hero"><div><span className="eyebrow">{region.type} · PILOT PROFILE</span><h1>{region.name}</h1><p>{region.notes}</p></div><StatusBadge tone={region.risk === "critical" ? "critical" : region.risk === "high" ? "warning" : "positive"}>{region.risk === "stable" ? "Relatif stabil" : "Priority attention"}</StatusBadge></section><div className="region-profile-grid"><section className="panel profile-metrics"><div><span>IKP 2024</span><b>{region.ikp.toFixed(2)}</b><small>Source: RENSTRA 2025–2029</small></div><div><span>PoU 2024</span><b>{region.pou.toFixed(2)}%</b><small>Source: RENSTRA 2025–2029</small></div><div><span>Interventions</span><b>{items.length}</b><small>Simulation records</small></div><div><span>Pending evaluation</span><b>{region.pendingEvaluations}</b><small>MEL queue</small></div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">INTERVENTION JOURNEY</span><h2>Timeline</h2></div></div><div className="timeline"><div className="timeline-item done"><span><Database size={16}/></span><div><b>Vulnerability profile updated</b><small>Public indicator baseline · {region.lastUpdated}</small></div></div>{items.map(item => <div className="timeline-item done" key={item.id}><span><FileCheck2 size={16}/></span><div><b>{item.title}</b><small>{item.startedAt} · {item.type} · Simulation</small></div></div>)}<div className={`timeline-item ${region.pendingEvaluations ? "current" : "done"}`}><span>{region.pendingEvaluations ? <Clock3 size={16}/> : <CheckCircle2 size={16}/>}</span><div><b>{region.pendingEvaluations ? "Outcome review pending" : "Current cycle reviewed"}</b><small>{region.pendingEvaluations ? "Follow-up evidence is still required" : "No pending evaluation in demo queue"}</small></div></div></div></section></div></div>;
+}
