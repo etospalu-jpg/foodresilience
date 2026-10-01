@@ -1,0 +1,5 @@
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { alerts } from "@/lib/data";
+import { StatusBadge } from "@/components/status-badge";
+export const metadata = { title: "Alerts" };
+export default function AlertsPage(){ return <div className="page-stack"><section className="page-heading"><div><span className="eyebrow">DECISION INTELLIGENCE</span><h1>Attention Inbox</h1><p>Transparent rule-based signals for coverage, evaluation, data freshness, and review.</p></div><StatusBadge tone="info">Rule engine V1</StatusBadge></section><section className="panel"><div className="alert-list">{alerts.map(a => <article className="alert-card" key={a.id}><div className={`alert-icon ${a.severity}`}>{a.severity === "info" ? <CheckCircle2 size={19}/> : <AlertTriangle size={19}/>}</div><div><span className="eyebrow">{a.kind.toUpperCase()} · {a.region}</span><h2>{a.title}</h2><p>{a.subtitle}</p></div><div className="alert-actions"><StatusBadge tone={a.severity === "critical" ? "critical" : a.severity === "warning" ? "warning" : "info"}>{a.age}</StatusBadge><button className="secondary-button">Review</button></div></article>)}</div></section></div>; }
