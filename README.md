@@ -1,1 +1,26 @@
-# foodresilience
+# NADI Pangan
+
+Food Resilience Monitoring, Evaluation & Learning platform for Sulawesi Tengah pilot exploration.
+
+## Product position
+NADI Pangan is a MEL layer, not a replacement for FSVA, SKPG, food-price systems, or other official government platforms. The MVP connects vulnerability context → intervention records → beneficiary coverage → follow-up → outcome → learning.
+
+## Data policy
+- Public pilot indicators are based on the project research baseline.
+- Intervention records included in the repository are **simulation data** and are visibly labelled in the UI.
+- No NIK, household identifiers, or individual health data are stored in the MVP.
+
+## Run locally
+```bash
+npm install
+npm run dev
+```
+
+Optional Neon connection:
+```bash
+cp .env.example .env.local
+# set DATABASE_URL
+npm run dev
+```
+
+Without `DATABASE_URL`, the app runs with a safe seed-data fallback.
