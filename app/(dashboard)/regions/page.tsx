@@ -1,6 +1,14 @@
-import Link from "next/link";
-import { ChevronRight, Search } from "lucide-react";
-import { regions } from "@/lib/data";
-import { StatusBadge } from "@/components/status-badge";
+import { RegionBrowser } from "@/components/region-browser";
+import { getRegions } from "@/lib/nadi-data";
+
 export const metadata = { title: "Wilayah" };
-export default function RegionsPage(){ return <div className="page-stack"><section className="page-heading"><div><span className="eyebrow">REGION PROFILES</span><h1>Wilayah</h1><p>Trace vulnerability context, intervention history, and evaluation status for each pilot region.</p></div><label className="inline-search"><Search size={17}/><input placeholder="Search wilayah..."/></label></section><div className="region-grid">{regions.map(r => <Link className="region-card" href={`/regions/${r.slug}`} key={r.slug}><div className="region-card-top"><div><span className="eyebrow">{r.type}</span><h2>{r.name}</h2></div><StatusBadge tone={r.risk === "critical" ? "critical" : r.risk === "high" ? "warning" : "positive"}>{r.risk === "stable" ? "Relatif stabil" : "Priority"}</StatusBadge></div><div className="region-metrics"><div><small>IKP 2024</small><strong>{r.ikp.toFixed(2)}</strong></div><div><small>PoU 2024</small><strong>{r.pou.toFixed(2)}%</strong></div><div><small>Intervensi</small><strong>{r.interventions}</strong></div></div><p>{r.notes}</p><div className="region-card-foot"><span>Updated {r.lastUpdated}</span><ChevronRight size={18}/></div></Link>)}</div></div>; }
+
+export default async function RegionsPage(){
+  const regions=await getRegions();
+  return <div className="page-stack">
+    <section className="page-heading">
+      <div><span className="eyebrow">REGION PROFILES · VERIFIED 2026</span><h1>Wilayah</h1><p>Seluruh 13 kabupaten/kota memakai IKP 2026 resmi Badan Pangan Nasional. Record intervensi pilot ditampilkan terpisah dan tetap berlabel simulasi.</p></div>
+    </section>
+    <RegionBrowser regions={regions}/>
+  </div>;
+}

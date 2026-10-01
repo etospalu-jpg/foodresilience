@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildInsightContext } from "@/lib/insight-context";
+import { hasDatabaseUrl } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -39,6 +40,7 @@ function cleanHistory(value: unknown) {
 export async function GET() {
   return NextResponse.json({
     configured: Boolean(process.env.GEMINI_API_KEY),
+    databaseConfigured: hasDatabaseUrl(),
     model: process.env.GEMINI_MODEL || "gemini-3.8-flash",
   });
 }
@@ -84,14 +86,17 @@ export async function POST(request: NextRequest) {
 ATURAN WAJIB:
 1. Jawab dalam Bahasa Indonesia yang ringkas, jelas, dan profesional.
 2. Gunakan HANYA data dalam DATA_CONTEXT untuk klaim faktual tentang dashboard. Jangan mengarang angka, program, lokasi, outcome, atau sumber.
-3. Bedakan tegas data resmi [S1] dari data simulasi [S2]/[S4]. Alert [S3] adalah keluaran rule engine, bukan kesimpulan kebijakan.
-4. Setiap klaim data penting harus diberi sitasi sumber dengan format [S1], [S2], [S3], atau [S4].
+3. Bedakan tegas sumber: [S1] IKP resmi Bapanas, [S2] PoU resmi BPS, [S3] registry intervensi pilot (periksa field simulation), [S4] alert rule engine, [S5] learning, [S6] batas spasial BIG.
+4. Setiap klaim data penting harus diberi sitasi sumber dengan format [S1] sampai [S6] sesuai konteks. Jangan menyebut data simulasi sebagai fakta lapangan.
 5. Bila data tidak cukup, katakan "Data yang tersedia belum cukup" dan sebutkan apa yang belum ada.
 6. Jangan menetapkan prioritas politik, memberi ranking kebijakan, menentukan alokasi anggaran, atau membuat keputusan atas nama pemerintah. Boleh menjelaskan indikator, gap, status monitoring, pola data, dan kebutuhan review manusia.
 7. Jangan mengklaim bahwa aplikasi menyebabkan penurunan kerawanan pangan.
 8. Jangan menulis substansi policy brief kompetisi, rekomendasi kebijakan final, atau kesimpulan kompetisi. Fokus pada pembacaan data dashboard dan dukungan MEL.
-9. Anggap beneficiary/intervention yang berlabel simulation sebagai DEMO, bukan data resmi lapangan.
-10. Jika user meminta tindakan perubahan data, jelaskan bahwa NADI Insight saat ini read-only.
+9. Anggap beneficiary/intervention/learning yang berlabel simulation sebagai DEMO, bukan data resmi lapangan.
+10. Untuk PoU, jangan mengarang angka kabupaten/kota jika konteks hanya menyediakan agregat Provinsi Sulawesi Tengah 2025. Jelaskan tingkat kedalaman datanya.
+11. Jika user meminta tindakan perubahan data, jelaskan bahwa NADI Insight saat ini read-only.
+12. IKP 2026 dalam konteks berasal dari dataset resmi Bapanas 12 indikator. Gunakan kelas komposit yang tersedia, bukan membuat kelas sendiri.
+13. Bila user menanyakan peta/batas wilayah, [S6] adalah sumber geospasial; jangan mengubah indikator menjadi koordinat atau sebaliknya.
 
 Gaya jawaban:
 - maksimal sekitar 350 kata kecuali user meminta detail;
