@@ -90,6 +90,7 @@ export function RegionMap({ regions, compact=false }: { regions: RegionSnapshot[
   const containerRef=useRef<HTMLDivElement>(null);
   const mapRef=useRef<MapLibreMap|null>(null);
   const rawGeoRef=useRef<any>(null);
+  const layerRef=useRef<LayerKey>("class");
   const [layer,setLayer]=useState<LayerKey>("class");
   const [selectedSlug,setSelectedSlug]=useState(regions.find(r=>r.pilot)?.slug ?? regions[0]?.slug ?? "");
   const [boundaryStatus,setBoundaryStatus]=useState<"loading"|"live"|"error">("loading");
@@ -161,10 +162,11 @@ export function RegionMap({ regions, compact=false }: { regions: RegionSnapshot[
           if(slug) setSelectedSlug(slug);
           const coordinates=e.lngLat;
           const metric=props?.metricValue;
-          const text=layer==="pilot" ? (props?.pilot ? "Pilot MEL" : "Cakupan resmi") : metric!==null&&metric!==undefined ? Number(metric).toFixed(layer==="class"?0:2) : "N/A";
+          const activeLayer=layerRef.current;
+          const text=activeLayer==="pilot" ? (props?.pilot ? "Pilot MEL" : "Cakupan resmi") : metric!==null&&metric!==undefined ? Number(metric).toFixed(activeLayer==="class"?0:2) : "N/A";
           new maplibregl.Popup({closeButton:false,offset:8})
             .setLngLat(coordinates)
-            .setHTML("<div class='nadi-map-popup'><b>"+String(props?.displayName ?? "Wilayah")+"</b><span>"+metricLabel(layer)+": "+text+"</span></div>")
+            .setHTML("<div class='nadi-map-popup'><b>"+String(props?.displayName ?? "Wilayah")+"</b><span>"+metricLabel(activeLayer)+": "+text+"</span></div>")
             .addTo(map);
         });
         map.fitBounds([[119.0,-3.9],[124.1,1.55]],{padding:compact?20:34,duration:0});
@@ -178,6 +180,7 @@ export function RegionMap({ regions, compact=false }: { regions: RegionSnapshot[
   },[]);
 
   useEffect(()=>{
+    layerRef.current=layer;
     const map=mapRef.current;
     const geo=rawGeoRef.current;
     if(!map || !geo || !map.getSource("sulteng-boundaries")) return;
