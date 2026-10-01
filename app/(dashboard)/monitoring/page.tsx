@@ -1,5 +1,28 @@
-import { Check, Circle, Clock3 } from "lucide-react";
-import { interventions } from "@/lib/data";
+import { Check,Clock3,FileCheck2,ShieldCheck } from "lucide-react";
+import { AskNadiButton } from "@/components/ask-nadi-button";
 import { StatusBadge } from "@/components/status-badge";
-export const metadata = { title: "Monitoring" };
-export default function MonitoringPage(){ const item=interventions[0]; return <div className="page-stack"><section className="page-heading"><div><span className="eyebrow">M&E WORKSPACE</span><h1>Monitoring</h1><p>Keep baseline, follow-up, outcome, and evidence in one controlled evaluation flow.</p></div><StatusBadge tone="warning">2 follow-ups due</StatusBadge></section><section className="panel monitoring-hero"><div><span className="eyebrow">SELECTED INTERVENTION</span><h2>{item.title}</h2><p>{item.region} · {item.id} · Simulation record</p></div><div className="monitoring-stepper">{[["Baseline","done"],["Intervention","done"],["Follow-up 1","done"],["Follow-up 2","current"],["Outcome","upcoming"]].map(([label,state]) => <div className={`step ${state}`} key={label}><span>{state === "done" ? <Check size={14}/> : state === "current" ? <Clock3 size={14}/> : <Circle size={12}/>}</span><b>{label}</b></div>)}</div></section><div className="monitoring-grid"><section className="panel"><div className="panel-head"><div><span className="eyebrow">MEASUREMENTS</span><h2>Baseline → follow-up</h2></div></div><div className="measurement-list">{[["Access index","42","55","52","+10"],["Availability signal","68","72","70","+2"],["Coverage reached","0%","95%","94.8%","+94.8"]].map(row => <div className="measurement-row" key={row[0]}><b>{row[0]}</b><span><small>Baseline</small>{row[1]}</span><span><small>Target</small>{row[2]}</span><span><small>Latest</small>{row[3]}</span><strong>{row[4]}</strong></div>)}</div><div className="data-note">Demo values only. Indicator definitions must be validated by the responsible stakeholder before production use.</div></section><section className="panel"><div className="panel-head"><div><span className="eyebrow">EVALUATION STATUS</span><h2>Evidence readiness</h2></div></div><div className="readiness-list"><div><span className="ready-dot good"/><div><b>Baseline available</b><small>4 required fields complete</small></div></div><div><span className="ready-dot good"/><div><b>Intervention verified</b><small>Target and realization recorded</small></div></div><div><span className="ready-dot warn"/><div><b>Follow-up #2 due</b><small>Outcome review cannot be closed yet</small></div></div></div><button className="secondary-button full">Open evaluation workspace</button></section></div></div>; }
+import { getInterventions,getMonitoringOverview } from "@/lib/nadi-data";
+
+export const metadata={title:"Monitoring"};
+
+function stateTone(status:string){return status==="overdue"?"critical":status==="due"?"warning":status==="completed"?"positive":"info" as const;}
+
+export default async function MonitoringPage(){
+  const [items,data]=await Promise.all([getInterventions(),getMonitoringOverview()]);
+  const cycles=(data.cycles as Array<Record<string,unknown>>);
+  const evaluations=(data.evaluations as Array<Record<string,unknown>>);
+  const due=cycles.filter(c=>["due","overdue"].includes(String(c.status))).length;
+  return <div className="page-stack">
+    <section className="page-heading"><div><span className="eyebrow">M&E WORKSPACE · NEON LIVE</span><h1>Monitoring</h1><p>Baseline, follow-up, outcome, dan evidence dibaca dari siklus monitoring database; tidak ada measurement demo buatan pada tampilan ini.</p></div><div className="heading-actions"><StatusBadge tone={due?"warning":"positive"}>{due} review due</StatusBadge><AskNadiButton prompt="Ringkas status monitoring dan evaluasi yang ada di NADI. Sebutkan yang due/overdue, evidence yang tersedia, dan mana yang simulasi." label="AI monitoring brief"/></div></section>
+    <div className="monitoring-grid">
+      <section className="panel"><div className="panel-head"><div><span className="eyebrow">MONITORING CYCLES</span><h2>Queue & follow-up</h2></div></div>
+        <div className="monitor-cycle-list">{cycles.length?cycles.map(c=><article className="monitor-cycle" key={String(c.id)}><span className={"cycle-icon "+String(c.status)}>{String(c.status)==="completed"?<Check size={15}/>:<Clock3 size={15}/>}</span><div><b>{String(c.intervention_title)}</b><small>{String(c.region_name)} · {String(c.stage).replaceAll("_"," ")} · due {c.due_at?new Date(String(c.due_at)).toLocaleDateString("id-ID"):"—"}</small><p>{c.notes?String(c.notes):"Belum ada catatan."}</p></div><StatusBadge tone={stateTone(String(c.status))}>{String(c.status)}</StatusBadge><AskNadiButton className="icon-ai-button" label="" prompt={"Jelaskan monitoring cycle untuk "+String(c.intervention_title)+", stage "+String(c.stage)+", status "+String(c.status)+". Apa yang masih dibutuhkan untuk menutup evaluasi?"}/></article>):<div className="empty-state">Belum ada monitoring cycle.</div>}</div>
+      </section>
+      <section className="panel"><div className="panel-head"><div><span className="eyebrow">EVALUATIONS</span><h2>Evidence readiness</h2></div></div>
+        <div className="evaluation-list">{evaluations.length?evaluations.map(e=><article className="evaluation-card" key={String(e.id)}><div className="evaluation-head"><span><FileCheck2 size={17}/></span><div><b>{String(e.intervention_title)}</b><small>{String(e.region_name)}</small></div></div><p>{e.evidence_summary?String(e.evidence_summary):"Evidence summary belum diisi."}</p><div className="tag-row"><StatusBadge tone="info">{String(e.outcome_status)}</StatusBadge><StatusBadge tone={String(e.verification_status)==="verified"?"positive":"neutral"}>{String(e.verification_status)}</StatusBadge></div></article>):<div className="empty-state">Belum ada evaluation record.</div>}</div>
+        <div className="data-note"><ShieldCheck size={14}/> Record pilot yang ada tetap berlabel simulation. NADI tidak mengubahnya menjadi outcome resmi tanpa verification workflow.</div>
+      </section>
+    </div>
+    <section className="panel"><div className="panel-head"><div><span className="eyebrow">INTERVENTION READINESS</span><h2>Registry coverage</h2></div></div><div className="readiness-table">{items.map(i=><div key={i.id}><b>{i.id}</b><span>{i.title}</span><small>{i.region}</small><StatusBadge tone={i.status==="awaiting_evaluation"?"warning":i.status==="active"?"positive":"info"}>{i.status.replaceAll("_"," ")}</StatusBadge></div>)}</div></section>
+  </div>;
+}
