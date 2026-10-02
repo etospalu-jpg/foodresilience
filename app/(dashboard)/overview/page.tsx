@@ -15,6 +15,12 @@ export default async function OverviewPage() {
   const [regions,interventions,alerts,province]=await Promise.all([getRegions(),getInterventions(),getAlerts(),getProvinceSnapshot()]);
   const pending=interventions.filter(i=>i.status==="awaiting_evaluation").length;
   const pilots=regions.filter(r=>r.pilot).length;
+  const metrics=[
+    {label:"Kab/kota terverifikasi",value:regions.length,note:"Bapanas IKP 2026",icon:MapPinned},
+    {label:"IKP Sulteng 2026",value:province.ikp2026?.toFixed(2) ?? "—",note:province.class2026,icon:TrendingUp},
+    {label:"PoU Sulteng 2025",value:province.pou2025===null?"—":province.pou2025.toFixed(2)+"%",note:"BPS · agregat provinsi",icon:AlertTriangle},
+    {label:"Evaluasi pilot tertunda",value:pending,note:pilots+" wilayah punya record pilot",icon:ClipboardCheck},
+  ];
   return (
     <div className="page-stack">
       <section className="page-heading">
@@ -29,11 +35,19 @@ export default async function OverviewPage() {
         </div>
       </section>
 
-      <div className="metric-strip">
-        <MetricCard label="Kab/kota terverifikasi" value={regions.length} note="Bapanas IKP 2026" icon={MapPinned}/>
-        <MetricCard label="IKP Sulteng 2026" value={province.ikp2026?.toFixed(2) ?? "—"} note={province.class2026} icon={TrendingUp}/>
-        <MetricCard label="PoU Sulteng 2025" value={province.pou2025===null?"—":province.pou2025.toFixed(2)+"%"} note="BPS · agregat provinsi" icon={AlertTriangle}/>
-        <MetricCard label="Evaluasi pilot tertunda" value={pending} note={pilots+" wilayah punya record pilot"} icon={ClipboardCheck}/>
+      <div className="metric-strip desktop-metric-strip">
+        {metrics.map(item=><MetricCard key={item.label} {...item}/>)}
+      </div>
+
+      <div className="mobile-metric-marquee" aria-label="Ringkasan indikator utama">
+        <div className="mobile-metric-track">
+          <div className="mobile-metric-set">
+            {metrics.map(item=><MetricCard key={"a-"+item.label} {...item}/>)}
+          </div>
+          <div className="mobile-metric-set" aria-hidden="true">
+            {metrics.map(item=><MetricCard key={"b-"+item.label} {...item}/>)}
+          </div>
+        </div>
       </div>
 
       <ExecutiveAiSummary/>
