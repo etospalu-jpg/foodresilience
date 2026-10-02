@@ -29,6 +29,7 @@ export default async function RegionDetail({ params }: { params: Promise<{ slug:
         <div><span>IKP 2026</span><b>{region.ikp2026?.toFixed(2)??"—"}</b><small>Bapanas · 12 indikator</small></div>
         <div><span>IKP 2025</span><b>{region.ikp2025?.toFixed(2)??"—"}</b><small>Dataset seri 2024–2026</small></div>
         <div><span>Perubahan</span><b>{region.ikpDelta===null?"—":(region.ikpDelta>0?"+":"")+region.ikpDelta.toFixed(2)}</b><small>2026 dibanding 2025</small></div>
+        <div><span>PoU 2025</span><b>{region.pou2025===null?"—":region.pou2025.toFixed(2)+"%"}</b><small>BPS · kabupaten/kota</small></div>
         <div><span>Peringkat 2026</span><b>{region.rank2026===null?"—":"#"+Math.round(region.rank2026)}</b><small>Peringkat dalam dataset kab/kota</small></div>
         <div><span>Ketersediaan</span><b>{region.availability2026?.toFixed(2)??"—"}</b><small>Komponen IKP 2026</small></div>
         <div><span>Keterjangkauan</span><b>{region.access2026?.toFixed(2)??"—"}</b><small>Komponen IKP 2026</small></div>
@@ -43,7 +44,7 @@ export default async function RegionDetail({ params }: { params: Promise<{ slug:
           {interventions.map(item=><div className="timeline-item done" key={item.id}><span><FileCheck2 size={16}/></span><div><b>{item.title}</b><small>{item.startedAt?new Date(item.startedAt).toLocaleDateString("id-ID"):"Tanggal belum diisi"} · {item.type} · {item.simulation?"Simulation":"Verified"}</small></div></div>)}
           <div className={"timeline-item "+(region.pendingEvaluations?"current":"done")}><span>{region.pendingEvaluations?<Clock3 size={16}/>:<CheckCircle2 size={16}/>}</span><div><b>{region.pendingEvaluations?"Outcome review pending":"Tidak ada evaluasi tertunda"}</b><small>{region.pendingEvaluations?region.pendingEvaluations+" record memerlukan follow-up":"Berdasarkan registry pilot NADI"}</small></div></div>
         </div>
-        <div className="data-note"><TrendingUp size={14}/> NADI tidak menampilkan PoU kabupaten/kota terbaru tanpa sumber resmi terverifikasi pada tingkat kedalaman yang sama. PoU 2025 yang tersedia saat ini digunakan pada agregat Provinsi Sulawesi Tengah.</div>
+        <div className="data-note"><TrendingUp size={14}/> PoU 2025 kabupaten/kota menggunakan tabel resmi BPS. IKP 2026 dan komponennya menggunakan Open Data Badan Pangan Nasional; keduanya ditampilkan sebagai indikator konteks, bukan outcome intervensi.</div>
       </section>
     </div>
   </div>;
