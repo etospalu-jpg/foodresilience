@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import maplibregl, { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import { ExternalLink, Layers3, MapPinned, RefreshCw } from "lucide-react";
 import type { RegionSnapshot } from "@/lib/nadi-data";
-import { AskNadiButton } from "./ask-nadi-button";
 import { StatusBadge } from "./status-badge";
 
 type LayerKey = "class" | "ikp" | "availability" | "access" | "utilization" | "pilot";
@@ -219,7 +218,6 @@ export function RegionMap({ regions, compact=false }: { regions: RegionSnapshot[
       </div>
       <StatusBadge tone={toneForPriority(selected.priority2026)}>{selected.class2026}</StatusBadge>
       <div className="map-actions">
-        <AskNadiButton prompt={"Jelaskan profil data terbaru untuk "+selected.name+": IKP 2026, komponen IKP, status pilot, intervensi, alert, dan keterbatasan data. Bedakan data resmi dan simulasi."} label="Jelaskan dengan AI"/>
         <Link className="text-link" href={"/regions/"+selected.slug}>Detail <ExternalLink size={14}/></Link>
       </div>
     </div>}
