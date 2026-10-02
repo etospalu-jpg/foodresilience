@@ -26,6 +26,10 @@ npm run dev
 Without `DATABASE_URL`, the app runs with a safe seed-data fallback.
 ## Pilot data architecture
 
-NADI Pangan separates verified public indicators from simulation MEL records. The current pilot reads verified IKP 2026 indicators from Neon, uses official BIG administrative boundaries for the spatial view, keeps Gemini/NADI Insight read-only, and labels pilot intervention/monitoring/learning records as simulation until a human verification workflow is added.
+NADI Pangan separates verified public indicators from simulation MEL records. The current pilot reads verified IKP 2026 indicators from Badan Pangan Nasional and PoU 2025 from BPS through Neon, uses official BIG administrative boundaries for the spatial view, keeps Gemini/NADI AI read-only, and labels pilot intervention/monitoring/learning records as simulation until a human verification workflow is added.
 
 Boundary lookup uses the official BIG kabupaten/kota service and resolves Sulawesi Tengah by the published province-name field, with code fallback; if the official service returns no geometry, the app shows an explicit unavailable state instead of drawing synthetic boundaries.
+
+
+## Deployment workflow
+Vercel is configured to skip non-main Git preview builds. Production is built from `main` only, preventing unnecessary preview deploys on the Hobby quota.
