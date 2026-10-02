@@ -38,7 +38,7 @@ export function RegionBrowser({regions}:{regions:RegionSnapshot[]}){
           <div className="region-metrics">
             <div><small>IKP 2026</small><strong>{r.ikp2026?.toFixed(2)??"—"}</strong></div>
             <div><small>Δ vs 2025</small><strong>{r.ikpDelta===null?"—":(r.ikpDelta>0?"+":"")+r.ikpDelta.toFixed(2)}</strong></div>
-            <div><small>Peringkat</small><strong>{r.rank2026===null?"—":"#"+Math.round(r.rank2026)}</strong></div>
+            <div><small>PoU 2025</small><strong>{r.pou2025===null?"—":r.pou2025.toFixed(2)+"%"}</strong></div>
           </div>
           <p>{r.notes}</p>
           <div className="region-card-foot"><span>{r.pilot?"Pilot MEL + official indicators":"Official indicators"}</span><span>Open →</span></div>
