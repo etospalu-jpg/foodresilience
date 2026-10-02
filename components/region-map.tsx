@@ -7,11 +7,12 @@ import { ExternalLink, Layers3, MapPinned, RefreshCw } from "lucide-react";
 import type { RegionSnapshot } from "@/lib/nadi-data";
 import { StatusBadge } from "./status-badge";
 
-type LayerKey = "class" | "ikp" | "availability" | "access" | "utilization" | "pilot";
+type LayerKey = "class" | "ikp" | "pou" | "availability" | "access" | "utilization" | "pilot";
 
 const layerOptions: Array<{key:LayerKey;label:string}> = [
   {key:"class",label:"Kelas IKP 2026"},
   {key:"ikp",label:"IKP 2026"},
+  {key:"pou",label:"PoU 2025"},
   {key:"availability",label:"Ketersediaan"},
   {key:"access",label:"Keterjangkauan"},
   {key:"utilization",label:"Pemanfaatan"},
@@ -32,6 +33,7 @@ function toneForPriority(priority:number|null) {
 function valueFor(region:RegionSnapshot,layer:LayerKey) {
   if(layer==="class") return region.priority2026;
   if(layer==="ikp") return region.ikp2026;
+  if(layer==="pou") return region.pou2025;
   if(layer==="availability") return region.availability2026;
   if(layer==="access") return region.access2026;
   if(layer==="utilization") return region.utilization2026;
@@ -41,6 +43,7 @@ function valueFor(region:RegionSnapshot,layer:LayerKey) {
 function metricLabel(layer:LayerKey) {
   if(layer==="class") return "Prioritas komposit";
   if(layer==="ikp") return "IKP 2026";
+  if(layer==="pou") return "PoU 2025";
   if(layer==="availability") return "Indeks ketersediaan";
   if(layer==="access") return "Indeks keterjangkauan";
   if(layer==="utilization") return "Indeks pemanfaatan";
@@ -55,6 +58,11 @@ function fillExpression(layer:LayerKey): maplibregl.ExpressionSpecification {
   }
   if(layer==="pilot"){
     return ["case",["==",["get","pilot"],true],"#275F4D","#DDE4E0"];
+  }
+  if(layer==="pou"){
+    return ["interpolate",["linear"],["coalesce",["get","metricValue"],0],
+      5,"#39775B",8,"#6E8799",12,"#B77929",18,"#A74742",22,"#8E3A36"
+    ];
   }
   return ["interpolate",["linear"],["coalesce",["get","metricValue"],0],
     25,"#A74742",55,"#B77929",70,"#6E8799",80,"#39775B",95,"#1D5144"
@@ -224,8 +232,8 @@ export function RegionMap({ regions, compact=false }: { regions: RegionSnapshot[
 
     <div className="map-provenance">
       <MapPinned size={14}/>
-      <span>Batas wilayah: Badan Informasi Geospasial. Indikator: Open Data Badan Pangan Nasional, IKP 12 indikator 2026. {sourceTimestamp?"Boundary fetched "+new Date(sourceTimestamp).toLocaleDateString("id-ID")+".":""}</span>
+      <span>Batas wilayah: Badan Informasi Geospasial. Indikator: Open Data Badan Pangan Nasional (IKP 2026) dan BPS (PoU 2025). {sourceTimestamp?"Boundary fetched "+new Date(sourceTimestamp).toLocaleDateString("id-ID")+".":""}</span>
     </div>
-    {layer!=="class"&&layer!=="pilot"&&<div className="data-note">Warna pada layer komponen adalah skala visual untuk eksplorasi, bukan kategori kebijakan. Klasifikasi resmi tetap ditampilkan sebagai kelas IKP.</div>}
+    {layer!=="class"&&layer!=="pilot"&&<div className="data-note">{layer==="pou"?"Warna PoU adalah skala visual untuk eksplorasi data BPS 2025, bukan klasifikasi kebijakan.":"Warna pada layer komponen adalah skala visual untuk eksplorasi, bukan kategori kebijakan. Klasifikasi resmi tetap ditampilkan sebagai kelas IKP."}</div>}
   </section>;
 }
