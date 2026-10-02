@@ -70,3 +70,59 @@
 @media(max-width:760px){
   .real-map-stage,.map-compact .real-map-stage{height:470px;margin-left:-16px;margin-right:-16px;border-radius:0;border-left:0;border-right:0}.map-toolbar{align-items:flex-start;flex-direction:column}.map-toolbar .pill-scroll{width:100%}.map-verified-chip{align-self:flex-start}.verified-detail{grid-template-columns:1fr}.verified-detail .map-mini-metrics{grid-column:1;grid-row:auto}.verified-detail>.status{grid-column:1;grid-row:auto}.map-actions{justify-content:flex-start}.map-actions .secondary-button{flex:1}.map-source-state{font-size:8px}.map-provenance{font-size:8px}.nadi-modal{width:100%;max-height:calc(var(--visual-height) - 18px);border-radius:20px 20px 0 0;padding:16px}.modal-backdrop{align-items:end;padding:0;top:var(--visual-top);bottom:var(--visual-bottom)}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.field input,.field select,.field textarea{font-size:16px!important}.modal-actions{position:sticky;bottom:0;background:#fff;padding-top:10px}.region-toolbar{align-items:flex-start;flex-direction:column}.region-toolbar .pill-scroll{width:100%}.region-hero-actions{width:100%}.region-hero-actions .secondary-button{flex:1}.verified-profile{grid-template-columns:1fr 1fr}.intervention-toolbar>.primary-button{width:100%}.intervention-ai{grid-column:1/-1;width:100%}.monitor-cycle{grid-template-columns:32px 1fr auto}.monitor-cycle>.icon-ai-button{grid-column:2/4;width:100%;height:34px}.readiness-table>div{grid-template-columns:60px 1fr auto}.readiness-table small{grid-column:2}.source-list>article{grid-template-columns:1fr auto 34px}.search-overlay{padding-top:calc(var(--visual-top) + 70px)}.search-dialog{width:calc(100vw - 20px)}.search-command{display:none!important}
 }
+
+
+/* Single global NADI AI experience */
+.nadi-ai-fab{
+  position:fixed;right:24px;bottom:24px;z-index:65;
+  min-width:176px;height:56px;border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;padding:0 14px 0 10px;
+  background:linear-gradient(145deg,#123c32,#1f5648);
+  color:#fff;display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:9px;
+  box-shadow:0 18px 46px rgba(17,52,43,.28),inset 0 1px rgba(255,255,255,.08);
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+.nadi-ai-fab:hover{transform:translateY(-2px);box-shadow:0 22px 52px rgba(17,52,43,.32)}
+.nadi-ai-fab-icon{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.12);display:grid;place-items:center}
+.nadi-ai-fab-copy{text-align:left;min-width:0}.nadi-ai-fab-copy b,.nadi-ai-fab-copy small{display:block}
+.nadi-ai-fab-copy b{font-size:12px;letter-spacing:.01em}.nadi-ai-fab-copy small{font-size:9px;color:#c6d8d0;margin-top:2px;white-space:nowrap}
+
+.ai-overview-card{
+  position:relative;overflow:hidden;
+  border:1px solid #cfdcd5;border-radius:18px;
+  background:linear-gradient(135deg,#123c32 0%,#17483c 44%,#f7faf8 44.1%,#fff 100%);
+  min-height:230px;padding:22px;box-shadow:0 10px 30px rgba(18,60,50,.07);
+}
+.ai-overview-card:after{content:"";position:absolute;right:-70px;top:-95px;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(123,155,131,.12),transparent 68%);pointer-events:none}
+.ai-overview-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1}
+.ai-overview-identity{display:flex;align-items:center;gap:12px;color:#fff;max-width:46%}
+.ai-overview-icon{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.12);display:grid;place-items:center;flex:0 0 auto}
+.ai-overview-identity .eyebrow{color:#b9cec4}.ai-overview-identity h2{font-size:18px;margin:5px 0 0;letter-spacing:-.025em}
+.ai-overview-actions{display:flex;align-items:center;gap:8px}
+.ai-live-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid #dce6e0;background:#fff;border-radius:999px;color:#53625b;font-size:9px;font-weight:750}
+.ai-refresh,.ai-chat-link{border:1px solid #dce5df;background:#fff;color:#31433a;border-radius:10px;min-height:34px;padding:0 10px;display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700}
+.ai-refresh:disabled{opacity:.55;cursor:not-allowed}
+.ai-overview-body{position:relative;z-index:1;margin-left:49%;margin-top:16px;min-height:118px}
+.ai-analysis-text{white-space:pre-wrap;color:#34423b;font-size:11px;line-height:1.65}
+.ai-analysis-loading{display:grid;gap:9px;padding-top:5px}.ai-analysis-loading span{height:9px;border-radius:8px;background:linear-gradient(90deg,#edf1ee,#f8faf8,#edf1ee);background-size:200% 100%;animation:aiShimmer 1.2s linear infinite}.ai-analysis-loading span:nth-child(2){width:92%}.ai-analysis-loading span:nth-child(3){width:82%}.ai-analysis-loading span:nth-child(4){width:66%}
+.ai-overview-foot{position:relative;z-index:1;margin-left:49%;border-top:1px solid #e5ebe7;padding-top:11px;margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#7a867f;font-size:9px}
+.ai-overview-foot>span{display:flex;align-items:center;gap:6px;line-height:1.4}
+.ai-chat-link{color:#123c32;white-space:nowrap}
+.insight-error button{border:0;background:transparent;color:#7d2f2b;font-weight:800;text-decoration:underline;cursor:pointer}
+@keyframes aiShimmer{to{background-position:-200% 0}}
+
+@media(max-width:900px){
+  .ai-overview-card{background:linear-gradient(160deg,#123c32 0 36%,#fff 36.1% 100%)}
+  .ai-overview-top{flex-direction:column}.ai-overview-identity{max-width:100%}.ai-overview-actions{align-self:flex-end}
+  .ai-overview-body,.ai-overview-foot{margin-left:0}.ai-overview-body{margin-top:42px}
+}
+@media(max-width:760px){
+  .nadi-ai-fab{right:14px;bottom:calc(80px + env(safe-area-inset-bottom) + var(--visual-bottom));min-width:0;width:auto;height:50px;border-radius:16px;padding:0 12px 0 8px;grid-template-columns:34px auto;gap:7px}
+  .nadi-ai-fab-icon{width:34px;height:34px;border-radius:11px}.nadi-ai-fab-copy small,.nadi-ai-fab>svg:last-child{display:none}
+  .nadi-ai-fab-copy b{font-size:10px;white-space:nowrap}
+  .ai-overview-card{padding:17px;border-radius:15px;background:linear-gradient(170deg,#123c32 0 34%,#fff 34.1% 100%)}
+  .ai-overview-identity h2{font-size:16px}.ai-overview-actions{width:100%;justify-content:flex-end}
+  .ai-overview-body{margin-top:44px;min-height:100px}.ai-analysis-text{font-size:10.5px}
+  .ai-overview-foot{align-items:flex-start;flex-direction:column}.ai-chat-link{width:100%;justify-content:center}
+  .insight-drawer{height:calc(var(--visual-height) - 10px);max-height:calc(var(--visual-height) - 10px);border-radius:18px 18px 0 0}
+}

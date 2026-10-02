@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Bot, Database, LoaderCircle, Send, ShieldCheck, Sparkles, X } from "lucide-react";
+import { Bot, Database, LoaderCircle, MessageCircleMore, Send, ShieldCheck, Sparkles, X } from "lucide-react";
 
 type Message = { role: "user" | "assistant"; text: string };
 type Source = { id: string; label: string; kind: string };
@@ -33,7 +33,7 @@ export function NadiInsight() {
       const detail=(event as CustomEvent<{prompt?:string}>).detail;
       const prompt=detail?.prompt?.trim();
       setOpen(true);
-      if(prompt) void ask(prompt);
+      if(prompt) setTimeout(()=>void ask(prompt),0);
     };
     window.addEventListener("nadi:ask",handler as EventListener);
     return()=>window.removeEventListener("nadi:ask",handler as EventListener);
@@ -41,15 +41,13 @@ export function NadiInsight() {
 
   useEffect(()=>{ if(open) setTimeout(()=>endRef.current?.scrollIntoView({behavior:"smooth"}),60); },[open,messages,loading]);
 
-  async function ask(text: string) {
+  async function ask(text:string){
     const value=text.trim();
-    if(!value || loading) return;
-    setOpen(true);
-    setError("");
+    if(!value||loading) return;
+    setOpen(true); setError("");
     const previous=messages.slice(-6);
     setMessages(current=>[...current,{role:"user",text:value}]);
-    setQuestion("");
-    setLoading(true);
+    setQuestion(""); setLoading(true);
     try{
       const response=await fetch("/api/insight",{
         method:"POST",
@@ -57,33 +55,30 @@ export function NadiInsight() {
         body:JSON.stringify({question:value,history:previous}),
       });
       const data=await response.json();
-      if(!response.ok) throw new Error(data.error || "NADI Insight gagal memproses pertanyaan.");
+      if(!response.ok) throw new Error(data.error||"NADI AI gagal memproses pertanyaan.");
       setMessages(current=>[...current,{role:"assistant",text:data.answer}]);
       setSources(Array.isArray(data.sources)?data.sources:[]);
-      setContextMode(data.contextMode || "");
+      setContextMode(data.contextMode||"");
     }catch(err){
-      setError(err instanceof Error?err.message:"NADI Insight sedang tidak tersedia.");
-    }finally{
-      setLoading(false);
-    }
+      setError(err instanceof Error?err.message:"NADI AI sedang tidak tersedia.");
+    }finally{setLoading(false);}
   }
 
-  function submit(event:FormEvent){ event.preventDefault(); void ask(question); }
+  function submit(event:FormEvent){event.preventDefault();void ask(question);}
 
   return <>
-    <button className="insight-trigger" onClick={()=>setOpen(true)} aria-label="Buka NADI Insight">
-      <Sparkles size={16}/><span>Ask NADI</span><i>AI</i>
-    </button>
-    <button className="insight-trigger-mobile" onClick={()=>setOpen(true)} aria-label="Buka NADI Insight">
-      <Sparkles size={17}/><span>AI</span>
-    </button>
+    {!open&&<button className="nadi-ai-fab" onClick={()=>setOpen(true)} aria-label="Buka chatbot NADI AI">
+      <span className="nadi-ai-fab-icon"><Sparkles size={18}/></span>
+      <span className="nadi-ai-fab-copy"><b>NADI AI</b><small>Tanya semua data</small></span>
+      <MessageCircleMore size={17}/>
+    </button>}
 
     {open&&<div className="insight-backdrop" onClick={()=>setOpen(false)}>
-      <aside className="insight-drawer" onClick={e=>e.stopPropagation()} aria-label="NADI Insight">
+      <aside className="insight-drawer" onClick={e=>e.stopPropagation()} aria-label="Chatbot NADI AI">
         <header className="insight-head">
           <div className="insight-mark"><Sparkles size={18}/></div>
-          <div className="insight-title"><b>NADI Insight</b><span>Gemini analyst · verified-source aware</span></div>
-          <button className="insight-close" onClick={()=>setOpen(false)} aria-label="Tutup NADI Insight"><X size={19}/></button>
+          <div className="insight-title"><b>NADI AI</b><span>Chatbot analisis MEL · Gemini + Neon</span></div>
+          <button className="insight-close" onClick={()=>setOpen(false)} aria-label="Tutup chatbot"><X size={19}/></button>
         </header>
 
         <div className="insight-trust">
@@ -96,8 +91,8 @@ export function NadiInsight() {
         <div className="insight-body">
           {messages.length===0&&<div className="insight-welcome">
             <div className="insight-orb"><Sparkles size={24}/></div>
-            <h2>Tanya data NADI</h2>
-            <p>NADI Insight membaca indikator resmi, registry intervensi, alert MEL, monitoring, dan learning. Sumber resmi dan data simulasi selalu dipisahkan.</p>
+            <h2>Tanya seluruh data NADI</h2>
+            <p>Satu chatbot untuk membaca indikator resmi, wilayah, intervensi, alert MEL, monitoring, evaluasi, learning, dan sumber data. Data resmi dan simulasi selalu dibedakan.</p>
             <div className="insight-ready"><span className={health?.configured?"ready-dot good":"ready-dot warn"}/><b>{health?.configured?"Gemini siap digunakan":"Memeriksa koneksi Gemini"}</b></div>
             <div className="insight-prompts">{quickPrompts.map(prompt=><button key={prompt} onClick={()=>void ask(prompt)}>{prompt}</button>)}</div>
           </div>}
@@ -119,9 +114,9 @@ export function NadiInsight() {
         </div>
 
         <form className="insight-composer" onSubmit={submit}>
-          <textarea value={question} onChange={e=>setQuestion(e.target.value)} placeholder="Tanya IKP, wilayah, intervensi, evaluasi, atau sumber data..." rows={1} maxLength={1200} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();if(question.trim())void ask(question);}}}/>
+          <textarea value={question} onChange={e=>setQuestion(e.target.value)} placeholder="Tanya IKP, wilayah, intervensi, evaluasi, learning, atau sumber data..." rows={1} maxLength={1200} onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();if(question.trim())void ask(question);}}}/>
           <button type="submit" disabled={!question.trim()||loading} aria-label="Kirim pertanyaan"><Send size={17}/></button>
-          <small>AI membantu membaca data; keputusan dan verifikasi tetap oleh manusia.</small>
+          <small>AI membantu membaca data. Keputusan dan verifikasi tetap oleh manusia.</small>
         </form>
       </aside>
     </div>}

@@ -5,7 +5,6 @@ import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { RegionSnapshot } from "@/lib/nadi-data";
 import { StatusBadge } from "./status-badge";
-import { AskNadiButton } from "./ask-nadi-button";
 
 function tone(priority:number|null){
   if(priority===1||priority===2) return "critical" as const;
@@ -39,12 +38,11 @@ export function RegionBrowser({regions}:{regions:RegionSnapshot[]}){
           <div className="region-metrics">
             <div><small>IKP 2026</small><strong>{r.ikp2026?.toFixed(2)??"—"}</strong></div>
             <div><small>Δ vs 2025</small><strong>{r.ikpDelta===null?"—":(r.ikpDelta>0?"+":"")+r.ikpDelta.toFixed(2)}</strong></div>
-            <div><small>Peringkat</small><strong>{r.rank2026===null?"—":"#"+Math.round(r.rank2026)}</strong></div>
+            <div><small>PoU 2025</small><strong>{r.pou2025===null?"—":r.pou2025.toFixed(2)+"%"}</strong></div>
           </div>
           <p>{r.notes}</p>
           <div className="region-card-foot"><span>{r.pilot?"Pilot MEL + official indicators":"Official indicators"}</span><span>Open →</span></div>
         </Link>
-        <AskNadiButton className="region-ai-action" label="Ask NADI" prompt={"Analisis deskriptif data terbaru untuk "+r.name+". Jelaskan IKP 2026, perubahan dari 2025, tiga komponen, kelas resmi, status pilot, dan data yang belum tersedia. Jangan memberi keputusan kebijakan."}/>
       </article>)}
     </div>
     {!filtered.length&&<div className="empty-state">Tidak ada wilayah yang cocok dengan pencarian/filter.</div>}

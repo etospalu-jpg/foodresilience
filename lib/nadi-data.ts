@@ -10,6 +10,7 @@ export type RegionSnapshot = {
   ikp2026: number | null;
   ikp2025: number | null;
   ikpDelta: number | null;
+  pou2025: number | null;
   availability2026: number | null;
   access2026: number | null;
   utilization2026: number | null;
@@ -132,6 +133,7 @@ export async function getRegions(): Promise<RegionSnapshot[]> {
       ikp2026: null,
       ikp2025: null,
       ikpDelta: null,
+      pou2025: null,
       availability2026: null,
       access2026: null,
       utilization2026: null,
@@ -153,6 +155,7 @@ export async function getRegions(): Promise<RegionSnapshot[]> {
       r.id, r.slug, r.name, r.region_type, r.last_updated, r.notes, r.source_code,
       (select im.value from nadi.indicator_measurements im where im.region_id=r.id and im.indicator_code='IKP' and im.period='2026' limit 1) ikp_2026,
       (select im.value from nadi.indicator_measurements im where im.region_id=r.id and im.indicator_code='IKP' and im.period='2025' limit 1) ikp_2025,
+      (select im.value from nadi.indicator_measurements im where im.region_id=r.id and im.indicator_code='POU' and im.period='2025' limit 1) pou_2025,
       (select im.value from nadi.indicator_measurements im where im.region_id=r.id and im.indicator_code='IKP_AVAIL' and im.period='2026' limit 1) availability_2026,
       (select im.value from nadi.indicator_measurements im where im.region_id=r.id and im.indicator_code='IKP_ACCESS' and im.period='2026' limit 1) access_2026,
       (select im.value from nadi.indicator_measurements im where im.region_id=r.id and im.indicator_code='IKP_UTIL' and im.period='2026' limit 1) utilization_2026,
@@ -174,6 +177,7 @@ export async function getRegions(): Promise<RegionSnapshot[]> {
       id:String(r.id), slug:String(r.slug), name:String(r.name), type:String(r.region_type),
       ikp2026:current, ikp2025:previous,
       ikpDelta:current !== null && previous !== null ? Number((current-previous).toFixed(2)) : null,
+      pou2025:n(r.pou_2025),
       availability2026:n(r.availability_2026), access2026:n(r.access_2026), utilization2026:n(r.utilization_2026),
       priority2026:priority, rank2026:n(r.rank_2026), class2026:ikpClass(priority),
       interventionCount:Number(r.intervention_count ?? 0), pendingEvaluations:Number(r.pending_evaluations ?? 0),
