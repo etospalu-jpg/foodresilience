@@ -21,7 +21,7 @@ export default async function OverviewPage() {
         <div>
           <span className="eyebrow">EXECUTIVE INTELLIGENCE</span>
           <h1>Overview</h1>
-          <p>Indikator resmi terbaru dipisahkan dari record pilot MEL. IKP memakai rilis Bapanas 2026; PoU yang terverifikasi di dashboard ini ditampilkan pada tingkat provinsi untuk 2025.</p>
+          <p>Indikator resmi terbaru dipisahkan dari record pilot MEL. IKP memakai rilis Bapanas 2026; PoU 2025 memakai tabel resmi BPS untuk provinsi dan kabupaten/kota.</p>
         </div>
         <div className="heading-actions">
           <span className="source-chip"><ShieldCheck size={15}/> Verified sources + labeled simulation</span>
