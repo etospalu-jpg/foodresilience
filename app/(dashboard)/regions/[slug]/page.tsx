@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, Clock3, Database, FileCheck2, ShieldCheck, TrendingUp } from "lucide-react";
 import { StatusBadge } from "@/components/status-badge";
-import { AskNadiButton } from "@/components/ask-nadi-button";
 import { getRegionBySlug } from "@/lib/nadi-data";
 
 function tone(priority:number|null){
@@ -22,7 +21,7 @@ export default async function RegionDetail({ params }: { params: Promise<{ slug:
     <Link className="back-link" href="/regions"><ArrowLeft size={16}/> Wilayah</Link>
     <section className="region-hero">
       <div><span className="eyebrow">{region.type} · VERIFIED IKP 2026</span><h1>{region.name}</h1><p>{region.notes}</p></div>
-      <div className="region-hero-actions"><StatusBadge tone={tone(region.priority2026)}>{region.class2026}</StatusBadge><AskNadiButton prompt={"Jelaskan profil "+region.name+" berdasarkan data NADI terbaru. Fokus pada IKP 2026, perubahan dari 2025, komponen, intervensi pilot dan gap evaluasi. Bedakan fakta resmi dan simulasi."} label="Ask NADI"/></div>
+      <div className="region-hero-actions"><StatusBadge tone={tone(region.priority2026)}>{region.class2026}</StatusBadge></div>
     </section>
 
     <div className="region-profile-grid">
